@@ -1,5 +1,7 @@
 package com.onlinebanking.userportal.controller;
 
+import com.onlinebanking.userportal.domain.PrimaryAccount;
+import com.onlinebanking.userportal.domain.SavingsAccount;
 import com.onlinebanking.userportal.domain.User;
 import com.onlinebanking.userportal.domain.security.UserRole;
 import com.onlinebanking.userportal.service.RoleService;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -72,5 +75,20 @@ public class HomeController {
 
             return "redirect:/";
         }
+    }
+
+
+    @RequestMapping("/userPortal")
+    public String userPortal(Principal principal, Model model) {
+
+        User user = userService.findByUsername(principal.getName());
+
+        PrimaryAccount primaryAccount = user.getPrimaryAccount();
+        SavingsAccount savingsAccount = user.getSavingsAccount();
+
+        model.addAttribute("primaryAccount", primaryAccount);
+        model.addAttribute("savingsAccount", savingsAccount);
+
+        return "userPortal";
     }
 }
